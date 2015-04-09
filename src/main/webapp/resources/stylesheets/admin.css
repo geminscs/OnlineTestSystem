@@ -1,0 +1,61 @@
+/* CSS Document */
+*{
+	margin:0px;
+	padding:0px;
+}
+
+.container{
+	margin:0 auto;
+	padding:0px;
+	width:80%;
+	height:1050px;
+	text-align:left;
+	border-color:#000;
+	border-width:2px;
+	border-style:groove;
+}
+
+.header{
+	width:100%;
+	padding:0px;
+	height:50px;
+	background-color:#999;
+	font-size:36px;
+	text-align:center;
+	border-bottom-color:#000;
+	border-bottom-width:2px;
+	border-bottom-style:groove;
+	
+}
+
+.status{
+	width:100%
+	margin:0 auto;
+	padding:0px;
+	height:25px;
+	background-color:transparent;
+	border-bottom-color:#000;
+	border-bottom-style:groove;
+	border-bottom-width:2px;
+}
+
+.navLeft{
+	padding-top:15px;
+	background-color:transparent;
+	height:960px;
+	width:15%;
+	float:left;
+	border-color:transparent;
+	border-right-color:#000;
+	border-right-style:groove;
+	border-right-width:2px;
+}
+
+.content{
+	width:80%;
+	padding-top:15px;
+	overflow:auto;
+	float:left;
+	height:960px;
+	background-color:transparent;
+}

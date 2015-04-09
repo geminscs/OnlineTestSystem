@@ -13,8 +13,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 public class LoginController {
-
 	@RequestMapping(value="/", method=RequestMethod.GET)
+	public String Login(){
+		return "login";
+	}
+	
+	@RequestMapping(value="/", method=RequestMethod.POST)
+	public void Login_Post(String name, String password, String type, HttpServletResponse response) throws IOException{
+		 response.setContentType("text/plain");
+		 PrintWriter out = response.getWriter();
+		 out.println("Get post data:" + name + password + type);
+	}
+
+	@RequestMapping(value="/env", method=RequestMethod.GET)
 	public void env(HttpServletResponse response) throws IOException {
 	    response.setContentType("text/plain");
 	    PrintWriter out = response.getWriter();

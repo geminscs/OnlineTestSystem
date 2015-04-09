@@ -1,0 +1,56 @@
+/* CSS Document */
+*{
+	margin:0px;
+	padding:0px;
+}
+
+.container{
+	margin:0 auto;
+	padding:0px;
+	width:1000px;
+	height:1050px;
+	text-align:left;
+	border-color:#000;
+	border-width:2px;
+	border-style:groove;
+}
+
+.header{
+	height:50px;
+	background-color:#999;
+	font-size:36px;
+	text-align:center;
+	border-bottom-color:#000;
+	border-bottom-width:2px;
+	border-bottom-style:groove;
+}
+
+.status{
+	height:25px;
+	background-color:transparent;
+	border-bottom-color:#000;
+	border-bottom-style:groove;
+	border-bottom-width:2px;
+}
+
+.navLeft{
+	padding-left:15px;
+	padding-top:15px;
+	background-color:transparent;
+	height:960px;
+	width:100px;
+	float:left;
+	border-color:transparent;
+	border-right-color:#000;
+	border-right-style:groove;
+	border-right-width:2px;
+}
+
+.content{
+	padding-left:15px;
+	padding-top:15px;
+	width:800px;
+	float:left;
+	height:960px;
+	background-color:transparent;
+}
