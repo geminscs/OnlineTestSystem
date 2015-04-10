@@ -6,7 +6,9 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.train.services.ITeacherService;
 import com.train.services.IUserService;
+import com.train.models.Teacher;
 import com.train.models.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ import com.train.services.IStudentService;
 public class LoginController {
 	@Autowired  
 	 private IStudentService studentService;
+	@Autowired
+	private ITeacherService teacherService;
 	 @Autowired  
 	 private IUserService userService; 
 	
@@ -31,6 +35,11 @@ public class LoginController {
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public String Login(){
 		return "login";
+	}
+	
+	@RequestMapping(value="logout", method=RequestMethod.GET)
+	public String Logout(){
+		return "redirect:/";
 	}
 	
 	@RequestMapping(value="/", method=RequestMethod.POST)
@@ -46,6 +55,7 @@ public class LoginController {
 			else{
 				if(s.getPassword().equals(password)){
 					out.println("Login successfully");
+					return "redirect:/Main";
 				}
 				else{
 					out.println("Wrong password");
@@ -54,10 +64,22 @@ public class LoginController {
 			}
 		}
 		else{
-			
-		}
-		out.println("Get post data:" + name + password + type);
-		return "redirect:/Main";
+			Teacher t = teacherService.findbyAccount(name);
+			if(t == null){
+				out.println("No such teacher");
+				return "redirect:/";
+			}
+			else{
+				if(t.getPassword().equals(password)){
+					out.println("Login successfully");
+					return "redirect:/Admin";
+				}
+				else{
+					out.println("Wrong password");
+					return "redirect:/";
+				}
+			}
+		}		
 	}
 
 	@RequestMapping(value="/env", method=RequestMethod.GET)
