@@ -7,4 +7,5 @@ public interface IStudentService {
     public int deleteStudent(String account);  
     public void saveStudent(Student student);  
     public Student findbyAccount(String account);
+    public void updateStudent(Student student);
 }  

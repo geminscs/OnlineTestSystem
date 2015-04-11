@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.train.services.ITeacherService;
 import com.train.services.IUserService;
@@ -43,7 +44,7 @@ public class LoginController {
 	}
 	
 	@RequestMapping(value="/", method=RequestMethod.POST)
-	public String Login_Post(String name, String password, String type, HttpServletResponse response) throws IOException{
+	public String Login_Post(String name, String password, String type, HttpServletResponse response, HttpSession session) throws IOException{
 		response.setContentType("text/plain");
 		PrintWriter out = response.getWriter();
 		if(type.equals("student")){
@@ -55,6 +56,7 @@ public class LoginController {
 			else{
 				if(s.getPassword().equals(password)){
 					out.println("Login successfully");
+					session.setAttribute("s_account", name);
 					return "redirect:/Main";
 				}
 				else{
@@ -72,6 +74,7 @@ public class LoginController {
 			else{
 				if(t.getPassword().equals(password)){
 					out.println("Login successfully");
+					session.setAttribute("t_account", name);
 					return "redirect:/Admin";
 				}
 				else{

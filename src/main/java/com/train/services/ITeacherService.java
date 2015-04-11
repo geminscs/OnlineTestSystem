@@ -6,5 +6,6 @@ public interface ITeacherService {
     public int lookTeacher();  
     public int deleteTeacher(String account);  
     public void saveTeacher(Teacher teacher);  
+    public void updateTeacher(Teacher teacher);
     public Teacher findbyAccount(String account);
 }  

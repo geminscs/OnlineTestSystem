@@ -32,5 +32,8 @@ public class TeacherServiceImpl implements ITeacherService {
     }
 	public Teacher findbyAccount(String account) {
 		return teacherDao.findbyAccount(account);
+	}
+	public void updateTeacher(Teacher teacher) {
+		teacherDao.updateTeacher(teacher);
 	}  
 }

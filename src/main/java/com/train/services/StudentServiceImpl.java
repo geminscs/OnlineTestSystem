@@ -32,5 +32,8 @@ public class StudentServiceImpl implements IStudentService {
     }
 	public Student findbyAccount(String account) {
 		return studentDao.findbyAccount(account);
+	}
+	public void updateStudent(Student student) {
+		studentDao.updateStudent(student);
 	}  
 }

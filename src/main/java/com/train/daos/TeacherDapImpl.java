@@ -37,4 +37,8 @@ public class TeacherDapImpl extends BaseDao implements ITeacherDao{
 			return list.get(0);
 		}
 	}
+
+	public void updateTeacher(Teacher teacher) {
+		getCurrentSession().update(teacher);
+	}
 }

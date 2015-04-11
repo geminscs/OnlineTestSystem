@@ -50,5 +50,9 @@ public class StudentDaoImpl  extends BaseDao implements IStudentDao{
 		else{
 			return list.get(0);
 		}
+	}
+
+	public void updateStudent(Student student) {
+		getCurrentSession().update(student);
 	}  
 } 

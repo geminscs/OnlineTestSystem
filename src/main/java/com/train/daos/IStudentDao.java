@@ -23,5 +23,7 @@ public interface IStudentDao {
      */  
     public void saveStudent(Student student);
     
+    public void updateStudent(Student student);
+    
     public Student findbyAccount(String account);
 }  

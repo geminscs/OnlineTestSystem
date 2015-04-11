@@ -10,6 +10,8 @@ public interface ITeacherDao{
 	public int deleteTeacher(String account);
 
 	public void saveTeacher(Teacher teahcer);
+	
+	public void updateTeacher(Teacher teacher);
 
 	public Teacher findbyAccount(String account);
 }
