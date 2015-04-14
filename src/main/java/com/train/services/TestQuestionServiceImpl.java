@@ -34,4 +34,12 @@ public class TestQuestionServiceImpl implements ITestQuestionService{
 		return testQuestionDao.findByTestId(testId);
 	}
 
+	public List<TestQuestion> findByTestIdAndType(int testId, int type) {
+		return testQuestionDao.findByTestIdAndType(testId, type);
+	}
+
+	public void deleteTestQuestionByTestId(int testId) {
+		testQuestionDao.deleteTestQuestionByTestId(testId);
+	}
+
 }

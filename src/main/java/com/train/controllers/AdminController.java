@@ -10,10 +10,14 @@ import javax.servlet.http.HttpSession;
 
 import com.train.models.Teacher;
 import com.train.models.Test;
+import com.train.models.TestQuestion;
 import com.train.services.ITeacherService;
+import com.train.services.ITestQuestionService;
 import com.train.services.ITestService;
 import com.train.wrappers.TestWrapper;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,6 +35,9 @@ public class AdminController {
 	
 	@Autowired
 	private ITestService testService;
+	
+	@Autowired
+	private ITestQuestionService testQuestionService;
 	
 	@RequestMapping(value="/Admin", method=RequestMethod.GET)
 	public String mainHomePage(){
@@ -118,5 +125,78 @@ public class AdminController {
 				}
 				return;
 			}
+	}
+	
+	@RequestMapping(value="/EditPaper", method=RequestMethod.POST)
+	public String editPaper(String ID, Model model){
+		Test test = testService.findbyId(Integer.parseInt(ID));
+		if(test != null){
+			TestWrapper testWrapper = new TestWrapper(test);
+			List<TestQuestion> testQuestionsType0 = testQuestionService.findByTestIdAndType(test.getId(), 0);
+			List<TestQuestion> testQuestionsType1 = testQuestionService.findByTestIdAndType(test.getId(), 1);
+			List<TestQuestion> testQuestionsType2 = testQuestionService.findByTestIdAndType(test.getId(), 2);
+			
+			model.addAttribute("testWrapper", testWrapper);
+			model.addAttribute("testQuestionsType0", testQuestionsType0);
+			model.addAttribute("testQuestionsType1", testQuestionsType1);
+			model.addAttribute("testQuestionsType2", testQuestionsType2);
+		}
+		return "editPaper";
+	}
+	
+	@RequestMapping(value="/SubmitPaper", method=RequestMethod.POST)
+	public void editPaper_POST(String jsonString, String testInfoString, HttpServletResponse response){
+		try {
+			JSONArray jsonArray = new JSONArray(jsonString);
+			JSONObject testInfoJsonObject = new JSONObject(testInfoString);
+			testQuestionService.deleteTestQuestionByTestId(Integer.parseInt(testInfoJsonObject.getString("id")));
+			for(int i = 0;i < jsonArray.length();i ++){
+				JSONObject jsonObject = jsonArray.getJSONObject(i);
+				TestQuestion testQuestion = new TestQuestion();
+				testQuestion.setTestId(Integer.parseInt(testInfoJsonObject.getString("id")));
+				testQuestion.setContent(jsonObject.getString("content"));
+				testQuestion.setType(jsonObject.getInt("type"));
+				testQuestion.setAnsShort(-1);
+				testQuestion.setAnsLong("N/A");
+				testQuestion.setAnsA("N/A");
+				testQuestion.setAnsB("N/A");
+				testQuestion.setAnsC("N/A");
+				testQuestion.setAnsD("N/A");
+				testQuestion.setValue(0);
+				if(testQuestion.getType() == 0){
+					testQuestion.setAnsShort(Integer.parseInt(jsonObject.getString("answer")));
+					testQuestion.setAnsA(jsonObject.getString("option0"));
+					testQuestion.setAnsB(jsonObject.getString("option1"));
+					testQuestion.setAnsC(jsonObject.getString("option2"));
+					testQuestion.setAnsD(jsonObject.getString("option3"));
+				}
+				else if(testQuestion.getType() == 1){
+					testQuestion.setAnsShort(Integer.parseInt(jsonObject.getString("answer")));
+				}
+				else{
+					testQuestion.setAnsLong(jsonObject.getString("answer"));
+					testQuestion.setValue(Integer.parseInt(jsonObject.getString("value")));
+				}
+				testQuestionService.saveTestQuestion(testQuestion);
+			}
+			PrintWriter out = response.getWriter();
+			out.println("Submit successfully");
+			return;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			PrintWriter out;
+			try {
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				out = response.getWriter();
+				out.println("Fail to parse json string");
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

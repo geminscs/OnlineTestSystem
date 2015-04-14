@@ -33,16 +33,16 @@ public class TestQuestion {
 	private int value;
 	
 	@Column(name="a")
-	private String A;
+	private String ansA;
 	
 	@Column(name="b")
-	private String B;
+	private String ansB;
 	
 	@Column(name="c")
-	private String C;
+	private String ansC;
 	
 	@Column(name="d")
-	private String D;
+	private String ansD;
 
 	public TestQuestion() {
 		super();
@@ -50,8 +50,8 @@ public class TestQuestion {
 	}
 
 	public TestQuestion(Integer id, Integer testId, String content,
-			int ansShort, String ansLong, int type, int value, String a,
-			String b, String c, String d) {
+			int ansShort, String ansLong, int type, int value, String ansA,
+			String ansB, String ansC, String ansD) {
 		super();
 		this.id = id;
 		this.testId = testId;
@@ -60,10 +60,10 @@ public class TestQuestion {
 		this.ansLong = ansLong;
 		this.type = type;
 		this.value = value;
-		A = a;
-		B = b;
-		C = c;
-		D = d;
+		this.ansA = ansA;
+		this.ansB = ansB;
+		this.ansC = ansC;
+		this.ansD = ansD;
 	}
 
 	public Integer getId() {
@@ -122,37 +122,39 @@ public class TestQuestion {
 		this.value = value;
 	}
 
-	public String getA() {
-		return A;
+	public String getAnsA() {
+		return ansA;
 	}
 
-	public void setA(String a) {
-		A = a;
+	public void setAnsA(String ansA) {
+		this.ansA = ansA;
 	}
 
-	public String getB() {
-		return B;
+	public String getAnsB() {
+		return ansB;
 	}
 
-	public void setB(String b) {
-		B = b;
+	public void setAnsB(String ansB) {
+		this.ansB = ansB;
 	}
 
-	public String getC() {
-		return C;
+	public String getAnsC() {
+		return ansC;
 	}
 
-	public void setC(String c) {
-		C = c;
+	public void setAnsC(String ansC) {
+		this.ansC = ansC;
 	}
 
-	public String getD() {
-		return D;
+	public String getAnsD() {
+		return ansD;
 	}
 
-	public void setD(String d) {
-		D = d;
+	public void setAnsD(String ansD) {
+		this.ansD = ansD;
 	}
+
+	
 	
 	
 }

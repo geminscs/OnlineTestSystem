@@ -41,4 +41,15 @@ public class TestQuestionDaoImpl extends BaseDao implements ITestQuestionDao{
 		return query.list();
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<TestQuestion> findByTestIdAndType(int testId, int type) {
+		Query query = getCurrentSession().createSQLQuery("SELECT * FROM test_question where test_id = " + testId + " and type = " + type).addEntity(TestQuestion.class);
+		return query.list();
+	}
+
+	public void deleteTestQuestionByTestId(int testId) {
+		Query query = getCurrentSession().createSQLQuery("DELETE FROM test_question where test_id = " + testId);
+		query.executeUpdate();
+	}
+
 }
