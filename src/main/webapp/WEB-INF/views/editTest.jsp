@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>   
+
 <!DOCTYPE html>
 <html>
 <head lang="en">
@@ -29,18 +30,17 @@
             </tr>
             </thead>
             <tbody>
-            @for(x <- tests){
+            <c:forEach items="${testWrapper}" var="um">
             	<tr>
-                <td>@x.formalTest.id</td>
-                <td>@x.startTime </td>
-                <td>@x.endTime </td>
-                <td>@x.formalTest.duration </td>
-                <td><button name="edit" id="@x.formalTest.id" class="btn btn-primary btn-xs">编辑</button>
-                    <button name="delPaper" id="@x.formalTest.id" class="btn btn-primary btn-xs">删除</button>
-                </td>
-            </tr>
-            }
-           
+                	<td>${um.test.id }</td>
+                	<td>${um.formatStartTime }</td>
+                	<td>${um.formatEndTime }</td>
+                	<td>${um.test.duration }</td>
+                	<td><button name="edit" id="${um.test.id }" class="btn btn-primary btn-xs">编辑</button>
+                    	<button name="delPaper" id="${um.test.id }" class="btn btn-primary btn-xs">删除</button>
+                	</td>
+           		 </tr>
+            </c:forEach>
             <tr id="newTest">
                 <td id="newTestID"> </td>
                 <td><input id="startDate" type="date" name="startTime"><input id="startTime" type="time" name="startTime"></td>

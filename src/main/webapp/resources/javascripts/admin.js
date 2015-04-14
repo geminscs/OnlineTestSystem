@@ -5,7 +5,7 @@ $(document).ready(function(){
 	
     $("#edit").click(function(){
     	
-        $("#content").load("/EditTests");
+        $("#content").load("/EditTest");
         $('li[name="adminMenu"]').removeClass();
         $(this).addClass("active");
         

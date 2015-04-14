@@ -2,7 +2,6 @@ package com.train.controllers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -10,7 +9,6 @@ import javax.servlet.http.HttpSession;
 import com.train.services.ITeacherService;
 import com.train.services.IUserService;
 import com.train.models.Teacher;
-import com.train.models.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

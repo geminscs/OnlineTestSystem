@@ -1,7 +1,5 @@
 package com.train.daos;
 
-import java.util.List;
-
 import com.train.models.Teacher;
 
 public interface ITeacherDao{
