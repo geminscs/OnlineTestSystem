@@ -11,4 +11,5 @@ public interface ITestService {
     public void updateTest(Test test);
     public Test findbyId(int id);
     public List<Test> findAllTests();
+    public List<Test> findAllByTime(long time);
 }  

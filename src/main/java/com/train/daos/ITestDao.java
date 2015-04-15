@@ -16,4 +16,6 @@ public interface ITestDao{
 	public Test findbyId(int id);
 	
 	public List<Test> findAllTests();
+	
+	public List<Test> findAllByTime(long time);
 }

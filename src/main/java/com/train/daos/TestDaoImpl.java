@@ -48,4 +48,10 @@ public class TestDaoImpl extends BaseDao implements ITestDao{
 		List<Test> list = query.list();
 		return list;
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<Test> findAllByTime(long time) {
+		Query query = getCurrentSession().createSQLQuery("SELECT * FROM test where start_time < " + time + " and end_time > " + time).addEntity(Test.class);
+		return query.list();
+	}
 }

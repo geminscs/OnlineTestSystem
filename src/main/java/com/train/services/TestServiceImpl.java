@@ -38,6 +38,10 @@ public class TestServiceImpl implements ITestService {
 
 	public List<Test> findAllTests() {
 		return testDao.findAllTests();
+	}
+
+	public List<Test> findAllByTime(long time) {
+		return testDao.findAllByTime(time);
 	}  
   
     
