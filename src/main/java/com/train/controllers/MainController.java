@@ -7,9 +7,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.train.models.Grade;
 import com.train.models.Student;
 import com.train.models.Test;
 import com.train.models.TestQuestion;
+import com.train.services.IGradeService;
 import com.train.services.ITestQuestionService;
 import com.train.services.ITestService;
 import com.train.services.IUserService;
@@ -41,6 +43,9 @@ public class MainController {
 	 
 	 @Autowired
 	 private ITestQuestionService testQuestionService;
+	 
+	 @Autowired
+	 private IGradeService gradeService;
 	
 	 private static final int selectValue = 2;
 	 private static final int judgeValue = 2;
@@ -86,7 +91,7 @@ public class MainController {
 	}
 	
 	@RequestMapping(value="/StartTest", method=RequestMethod.POST)
-	public String FormalTest_POST(String ID, Model model, HttpSession session){
+	public String FormalTest_POST(String ID, Model model,HttpServletResponse response ,HttpSession session){
 		int testId = Integer.parseInt(ID);
 		String account = (String)session.getAttribute("s_account");
 		if(account == null){
@@ -95,6 +100,30 @@ public class MainController {
 		Student student = studentService.findbyAccount(account);
 		if(student == null){
 			return "redirect:/";
+		}
+		Grade grade = gradeService.findByStudentIdAndTestId(account, testId);
+		if(grade == null){
+			grade = new Grade();
+			grade.setStudentId(account);
+			grade.setTestId(testId);
+			grade.setStartTime(System.currentTimeMillis());
+			grade.setEndTime(-1);
+			grade.setSelectGrade(-1);
+			grade.setJudgeGrade(-1);
+			grade.setShortEssayGrade(-1);
+			grade.setTotalGrade(-1);
+			gradeService.saveGrade(grade);
+		}
+		else if(grade.getSelectGrade() >= 0){
+			PrintWriter out;
+			try {
+				out = response.getWriter();
+				out.println("You have attended this exam");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			return null;
 		}
 		Test test = testService.findbyId(testId);
 		List<TestQuestion> testQuestionType0 = testQuestionService.findByTestIdAndType(testId, 0);
@@ -111,6 +140,9 @@ public class MainController {
 	@RequestMapping(value="/FormalTestJudge", method=RequestMethod.POST)
 	public String JudgeForTest(String jsonString, String testID, HttpServletResponse response, HttpSession session){
 		String account = (String)session.getAttribute("s_account");
+		int testId = Integer.parseInt(testID);
+		PrintWriter out;
+		
 		if(account == null){
 			return "redirect:/";
 		}
@@ -118,11 +150,8 @@ public class MainController {
 		if(student == null){
 			return "redirect:/";
 		}
-		
-		int testId = Integer.parseInt(testID);
-		PrintWriter out;
 		try {
-			out = response.getWriter();
+			out = response.getWriter();		
 			JSONArray jsonArray = new JSONArray(jsonString);
 			int selectScore = 0, judgeScore = 0;
 			for(int i = 0;i < jsonArray.length();i ++){
@@ -145,8 +174,18 @@ public class MainController {
 				}
 			}
 			
-			
-			out.println("Submit successfully "+selectScore + " " + judgeScore);
+			Grade grade = gradeService.findByStudentIdAndTestId(account, testId);
+			if(grade == null){
+				out.println("Error:Can not create grade");
+			}
+			else{
+				grade.setEndTime(System.currentTimeMillis());
+				grade.setSelectGrade(selectScore);
+				grade.setJudgeGrade(judgeScore);
+				grade.setTotalGrade(selectScore + judgeScore);
+				gradeService.updateGrade(grade);
+				out.println("Submit successfully "+selectScore + " " + judgeScore);
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

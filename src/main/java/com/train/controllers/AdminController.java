@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import com.train.models.Teacher;
 import com.train.models.Test;
 import com.train.models.TestQuestion;
+import com.train.services.IGradeService;
 import com.train.services.ITeacherService;
 import com.train.services.ITestQuestionService;
 import com.train.services.ITestService;
@@ -38,6 +39,9 @@ public class AdminController {
 	
 	@Autowired
 	private ITestQuestionService testQuestionService;
+	
+	@Autowired
+	private IGradeService gradeService;
 	
 	@RequestMapping(value="/Admin", method=RequestMethod.GET)
 	public String mainHomePage(){

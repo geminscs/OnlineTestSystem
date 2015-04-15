@@ -37,7 +37,9 @@ public class LoginController {
 	}
 	
 	@RequestMapping(value="logout", method=RequestMethod.GET)
-	public String Logout(){
+	public String Logout(HttpSession session){
+		session.removeAttribute("s_account");
+		session.removeAttribute("t_account");
 		return "redirect:/";
 	}
 	
