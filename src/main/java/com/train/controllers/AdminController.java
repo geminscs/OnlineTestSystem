@@ -3,18 +3,27 @@ package com.train.controllers;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.train.models.Grade;
+import com.train.models.Student;
 import com.train.models.Teacher;
 import com.train.models.Test;
+import com.train.models.TestAnswer;
 import com.train.models.TestQuestion;
 import com.train.services.IGradeService;
+import com.train.services.IStudentService;
 import com.train.services.ITeacherService;
+import com.train.services.ITestAnswerService;
 import com.train.services.ITestQuestionService;
 import com.train.services.ITestService;
+import com.train.wrappers.GradeWrapper;
+import com.train.wrappers.ScoreListWrapper;
+import com.train.wrappers.TestAnswerWrapper;
 import com.train.wrappers.TestWrapper;
 
 import org.json.JSONArray;
@@ -42,6 +51,12 @@ public class AdminController {
 	
 	@Autowired
 	private IGradeService gradeService;
+	
+	@Autowired
+	private IStudentService studentService;
+	
+	@Autowired
+	private ITestAnswerService testAnswerService;
 	
 	@RequestMapping(value="/Admin", method=RequestMethod.GET)
 	public String mainHomePage(){
@@ -112,7 +127,7 @@ public class AdminController {
 				}
 				testService.saveTest(test);
 				PrintWriter out = response.getWriter();
-				out.println(""+test.getId());
+				out.print(""+test.getId());
 				return;
 				
 			} catch (Exception e) {
@@ -201,6 +216,107 @@ public class AdminController {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value="/MarkTests", method=RequestMethod.GET)
+	public String markTest(Model model){
+		List<TestWrapper> l = TestWrapper.generateTestWrapper(testService.findAllTests());
+		model.addAttribute("list", l);
+		return "selectTest";
+	}
+	
+	@RequestMapping(value="/SelectStudent", method=RequestMethod.POST)
+	public String selecStudent(String ID, Model model){
+		int testId = Integer.parseInt(ID);
+		List<Grade> grades = gradeService.findByTestId(testId);
+		List<Student> students = new ArrayList<Student>();
+		for(Grade x:grades){
+			if(x.getShortEssayGrade() < 0){
+				students.add(studentService.findbyAccount(x.getStudentId()));
+			}
+		}
+		model.addAttribute("list", students);
+		model.addAttribute("testId", testId);
+		return "selectStudent";
+	}
+	
+	@RequestMapping(value="/MarkStudent", method=RequestMethod.POST)
+	public String markStudent(String ID, String testID, Model model){
+		int testId = Integer.parseInt(testID);
+		String studentId = ID;
+		List<TestAnswer> testAnswers = testAnswerService.findByTestIdAndStudentId(testId, studentId);
+		List<TestAnswerWrapper> wrapper = new ArrayList<TestAnswerWrapper>();
+		for(TestAnswer x:testAnswers){
+			wrapper.add(new TestAnswerWrapper(x, testQuestionService.findById(x.getQuestionId())));
+		}
+		model.addAttribute("list", wrapper);
+		model.addAttribute("studentId", studentId);
+		model.addAttribute("testId", testId);
+		return "revise";
+	}
+	
+	@RequestMapping(value="/FormalJudge", method=RequestMethod.POST)
+	public void formalJudge(String jsonString, String testID, String studentID, HttpServletResponse response){
+		try {
+			JSONArray jsonArray = new JSONArray(jsonString);
+			int score = 0;
+			for(int i =0;i < jsonArray.length();i ++){
+				JSONObject jsonObject = jsonArray.getJSONObject(i);
+				score += Integer.parseInt(jsonObject.getString("score"));
+			}
+			String studentId = studentID;
+			int testId = Integer.parseInt(testID);
+			Grade grade = gradeService.findByStudentIdAndTestId(studentId, testId);
+			grade.setShortEssayGrade(score);
+			gradeService.updateGrade(grade);
+			
+			PrintWriter out = response.getWriter();
+			out.println("Submit successfully");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value="/StuScore", method=RequestMethod.GET)
+	public String gradeStatics(Model model){
+		List<TestWrapper> l = TestWrapper.generateTestWrapper(testService.findAllTests());
+		model.addAttribute("list", l);
+		return "scoreTestList";
+	}
+	
+	@RequestMapping(value="/ShowScoreList", method=RequestMethod.POST)
+	public String showScoreList(String ID, Model model){
+		int testId = Integer.parseInt(ID);
+		List<Grade> l = gradeService.findByTestId(testId);
+		List<ScoreListWrapper> wrapper = new ArrayList<ScoreListWrapper>();
+		for(Grade x:l){
+			wrapper.add(new ScoreListWrapper(x, studentService.findbyAccount(x.getStudentId())));
+		}
+		model.addAttribute("list", wrapper);
+		return "scoreList";
+	}
+	
+	@RequestMapping(value="/StuAdmin", method=RequestMethod.GET)
+	public String studentAdmin(Model model){
+		List<Student> l = studentService.findAll();
+		model.addAttribute("list", l);
+		return "stuInfo";
+	}
+	
+	@RequestMapping(value="/DeleteStudent", method=RequestMethod.POST)
+	public void deleteStudent(String ID, HttpServletResponse response){
+		String studentId = ID;
+		List<Grade> l = gradeService.findByStudentId(studentId);
+		if(l != null && l.size() > 0){
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		}
+		else{
+			studentService.deleteStudent(studentId);
 		}
 	}
 }

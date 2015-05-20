@@ -1,5 +1,7 @@
 package com.train.daos;
 
+import java.util.List;
+
 import com.train.models.Student;
 
 public interface IStudentDao {  
@@ -24,4 +26,6 @@ public interface IStudentDao {
     public void updateStudent(Student student);
     
     public Student findbyAccount(String account);
+    
+    public List<Student> findAll();
 }  

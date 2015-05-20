@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
   
 
 
+
 import com.train.daos.BaseDao;  
 import com.train.models.Student;  
   
@@ -54,5 +55,11 @@ public class StudentDaoImpl  extends BaseDao implements IStudentDao{
 
 	public void updateStudent(Student student) {
 		getCurrentSession().update(student);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Student> findAll() {
+		Query query = getCurrentSession().createSQLQuery("SELECT * FROM student").addEntity(Student.class);  
+        return query.list(); 
 	}  
 } 

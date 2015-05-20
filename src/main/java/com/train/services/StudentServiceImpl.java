@@ -1,8 +1,11 @@
 package com.train.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;  
 import org.springframework.stereotype.Service;  
   
+
 
 import com.train.daos.IStudentDao;  
 import com.train.models.Student;  
@@ -35,5 +38,8 @@ public class StudentServiceImpl implements IStudentService {
 	}
 	public void updateStudent(Student student) {
 		studentDao.updateStudent(student);
+	}
+	public List<Student> findAll() {
+		return studentDao.findAll();
 	}  
 }

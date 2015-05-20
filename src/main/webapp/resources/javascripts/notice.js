@@ -30,5 +30,5 @@ $(document).ready(function(){
     
   $(document).on("click",'button[name="startTest"]',function(){
   	$("#content").load("/StartTest", {ID:this.id});
-  });[]
+  });
 });

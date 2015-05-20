@@ -10,7 +10,7 @@ public interface IGradeDao {
 	public void updateGrade(Grade grade);
 	
 	public void deleteGrade(int id);
-	
+		
 	public Grade findById(int id);
 	
 	public List<Grade> findByStudentId(String studentId);

@@ -1,5 +1,7 @@
 package com.train.services;
 
+import java.util.List;
+
 import com.train.models.Student;;
 
 public interface IStudentService {  
@@ -8,4 +10,5 @@ public interface IStudentService {
     public void saveStudent(Student student);  
     public Student findbyAccount(String account);
     public void updateStudent(Student student);
+    public List<Student> findAll();
 }  

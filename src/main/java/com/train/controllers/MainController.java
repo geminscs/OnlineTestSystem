@@ -10,8 +10,10 @@ import javax.servlet.http.HttpSession;
 import com.train.models.Grade;
 import com.train.models.Student;
 import com.train.models.Test;
+import com.train.models.TestAnswer;
 import com.train.models.TestQuestion;
 import com.train.services.IGradeService;
+import com.train.services.ITestAnswerService;
 import com.train.services.ITestQuestionService;
 import com.train.services.ITestService;
 import com.train.services.IUserService;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.train.services.IStudentService;
+import com.train.wrappers.GradeWrapper;
 import com.train.wrappers.TestWrapper;
 
 /**
@@ -46,6 +49,9 @@ public class MainController {
 	 
 	 @Autowired
 	 private IGradeService gradeService;
+	 
+	 @Autowired
+	 private ITestAnswerService testAnswerService;
 	
 	 private static final int selectValue = 2;
 	 private static final int judgeValue = 2;
@@ -172,6 +178,14 @@ public class MainController {
 						judgeScore += judgeValue;
 					}
 				}
+				else{
+					TestAnswer testAnswer = new TestAnswer();
+					testAnswer.setTestId(testId);
+					testAnswer.setQuestionId(questionId);
+					testAnswer.setStudentId(account);
+					testAnswer.setAnswer(jsonObject.getString("answer"));
+					testAnswerService.saveTestAnswer(testAnswer);
+				}
 			}
 			
 			Grade grade = gradeService.findByStudentIdAndTestId(account, testId);
@@ -196,4 +210,22 @@ public class MainController {
 		return null;
 	}
 	
+	@RequestMapping(value="/GetGrade", method=RequestMethod.GET)
+	public String getGrade(Model model, HttpSession session){
+		String account = (String)session.getAttribute("s_account");
+		if(account == null){
+			return null;
+		}
+		else{
+			Student s = studentService.findbyAccount(account);
+			if(s == null){
+				return null;
+			}
+			else{
+				List<GradeWrapper> l = GradeWrapper.generateTestWrapper(gradeService.findByStudentId(account));
+				model.addAttribute("list", l);
+				return "getGrade";
+			}
+		}
+	}
 }
