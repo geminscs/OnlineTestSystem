@@ -6,7 +6,6 @@ import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 import com.train.models.TestAnswer;
-import com.train.models.TestQuestion;
 
 @Repository
 public class TestAnswerDaoImpl extends BaseDao implements ITestAnswerDao{

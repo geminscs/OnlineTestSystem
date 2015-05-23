@@ -6,7 +6,39 @@
 <head lang="en">
     <meta charset="UTF-8">
     <script src="javascripts/jquery-1.9.0.min.js"></script>
+     <script src="layer/layer.js"></script>
     <script type="text/javascript" src="javascripts/editPaper.js"></script>
+    <style type="text/css">
+		#dialog{
+			background-color:#fff; 
+			border:5px solid rgba(0,0,0, 0.4); 
+			height:400px; 
+			left:50%; 
+			margin:-200px 0 0 -200px; 
+			padding:1px; 
+			position:fixed !important; /* 浮动对话框 */ 
+			position:absolute; 
+			top:50%; 
+			width:400px; 
+			z-index:5; 
+			border-radius:5px; 
+			display:none;
+		}
+		#questions{
+			width:80%;
+			padding-top:15px;
+			overflow:auto;
+			float:left;
+			height:960px;
+			background-color:transparent;
+		}
+		#confirm{
+			top:90%;
+		}
+		#cancel{
+			bottom:10px;
+		}
+	</style>
     <title></title>
 </head>
 <body>
@@ -36,6 +68,8 @@
                     <input type="radio" name="selectAnswer<%=order %>" value="2" <c:if test="${um.ansShort==2}">checked</c:if> >C.<input type="text" id="select<%=order %>option2" value = "${um.ansC}" >
                     <br/>
                     <input type="radio" name="selectAnswer<%=order %>" value="3"<c:if test="${um.ansShort==3}">checked</c:if>  >D.<input type="text" id="select<%=order %>option3" value = "${um.ansD}" >
+                    <br/><br/>
+                    <button id="selectFromDatabase<%=order %>" name="selectFromDatabase" class="btn btn-primary btn-xs">从题库中添加</button>
                     <br/><br/>
                 </div>
                <% order ++; %>
@@ -83,5 +117,22 @@
     <div align="center">
         <button id="submit" class="btn btn-primary btn-xs">提交</button>
     </div>
+    
+    <div id="dialog">
+                        选择知识点
+        <br/>
+		<select id="point">
+		  <option value="集线器">集线器</option>
+		  <option value="路由器">路由器</option>
+		  <option value="交换机">交换机</option>
+		  <option value="中继器">中继器</option>
+		</select>
+		<br/><br/>
+		<div id='questions'>
+		</div>
+		<br/><br/>
+		<button id="confirm">Confirm</button>
+		<button id="cancel">Cancel</button>
+	</div>
 </body>
 </html>

@@ -4,18 +4,22 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.train.models.Grade;
+import com.train.models.Question;
 import com.train.models.Student;
 import com.train.models.Teacher;
 import com.train.models.Test;
 import com.train.models.TestAnswer;
 import com.train.models.TestQuestion;
 import com.train.services.IGradeService;
+import com.train.services.IQuestionService;
 import com.train.services.IStudentService;
 import com.train.services.ITeacherService;
 import com.train.services.ITestAnswerService;
@@ -57,6 +61,9 @@ public class AdminController {
 	
 	@Autowired
 	private ITestAnswerService testAnswerService;
+	
+	@Autowired
+	private IQuestionService questionService;
 	
 	@RequestMapping(value="/Admin", method=RequestMethod.GET)
 	public String mainHomePage(){
@@ -317,6 +324,33 @@ public class AdminController {
 		}
 		else{
 			studentService.deleteStudent(studentId);
+		}
+	}
+	
+	@RequestMapping(value="/GetQuestion", method=RequestMethod.POST)
+	public String getQuestionsForEdit(String point, Model model){
+		List<Question> l = questionService.findByCatagoryAndType(point, 0);
+		model.addAttribute("list", l);
+		return "testLayer";
+	}
+	
+	@RequestMapping(value="/GetFullQuestion", method=RequestMethod.GET)
+	public void getFullQuestionForEdit(HttpServletResponse response){
+		try {
+			Map<String, Object> result = new HashMap<String, Object>();
+			result.put("content", "율율율율");
+			response.setCharacterEncoding("UTF-8");  
+		    response.setContentType("text/html; charset=utf-8");  
+			PrintWriter out= response.getWriter();
+			JSONObject jsonObj =new JSONObject(result);
+			//jsonObj.put("content", "율율율");
+			//jsonObj.put("ansA", "A");
+			//jsonObj.put("ansB", "B");
+			String str = new String(jsonObj.toString().getBytes(), "UTF-8");
+			out.print(str);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

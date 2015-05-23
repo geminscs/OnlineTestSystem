@@ -2,6 +2,30 @@
  * Created by Administrator on 2015/3/21.
  */
 $(document).ready(function(){
+    $(document).off("click",'button[name="selectFromDatabase"]');
+    $(document).on("click",'button[name="selectFromDatabase"]',function(){
+    	$('#questions').empty();
+        $('#dialog').show();
+    });
+    
+    $('#confirm').click(function(){
+    	var selectedQuestionIndex = $('#selectedQuestion').val();
+    	var selectedTr = $('#questionTable').children().children().eq(selectedQuestionIndex).children().eq(1);
+    	$.get("/GetFullQuestion", function(jsonString){
+    		$('#selectContent1').val(jsonString);
+    	});
+    	$('#dialog').hide();
+    });
+    
+    $('#cancel').click(function(){
+    	$('#dialog').hide();
+    });
+    
+    $('#point').change(function(){
+    	var seletedPoint = $(this).children('option:selected').val();
+    	$('#questions').load( '/GetQuestion', {point:seletedPoint});
+    });
+	
     $("#addSelect").click(function(){
         var id=$("#maxSelectID").val();
         id++;
@@ -15,6 +39,8 @@ $(document).ready(function(){
         '<input type="radio" name="selectAnswer'+id+'" value="2">C.<input type="text" id="select'+id+'option2">'+
         '<br/>'+
         '<input type="radio" name="selectAnswer'+id+'" value="3">D.<input type="text" id="select'+id+'option3">'+
+        '<br/><br/>'+
+        '<button name="selectFromDatabase" class="btn btn-primary btn-xs">从题库中添加</button>'+
         '<br/><br/>'+
         '</div>';
         $(this).before(str);
