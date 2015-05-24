@@ -69,7 +69,7 @@
                     <br/>
                     <input type="radio" name="selectAnswer<%=order %>" value="3"<c:if test="${um.ansShort==3}">checked</c:if>  >D.<input type="text" id="select<%=order %>option3" value = "${um.ansD}" >
                     <br/><br/>
-                    <button id="selectFromDatabase<%=order %>" name="selectFromDatabase" class="btn btn-primary btn-xs">从题库中添加</button>
+                    <button name="selectFromDatabase" class="btn btn-primary btn-xs">从题库中添加</button>
                     <br/><br/>
                 </div>
                <% order ++; %>
@@ -87,6 +87,8 @@
                     <br/><br/>
                     <input type="radio" name="judgeAnswer<%=order %>" value="0" <c:if test="${um.ansShort==0}">checked</c:if> >错误
                     <input type="radio" name="judgeAnswer<%=order %>" value="1" <c:if test="${um.ansShort==1}">checked</c:if> >正确
+                    <br/><br/>
+                    <button name="judgeFromDatabase" class="btn btn-primary btn-xs">从题库中添加</button>
                     <br/><br/>
                 </div>
                 <% order ++; %>
@@ -106,6 +108,8 @@
                     <textarea id="shortAnswer<%=order %>" cols="100" rows="3"  style="vertical-align: top;">${um.ansLong}</textarea>
                     <br/><br/>
                     <label>分值：</label><input id="shortValue<%=order %>" type="number" value="${um.value}">
+                    <br/><br/>
+                    <button name="shortFromDatabase" class="btn btn-primary btn-xs">从题库中添加</button>
                     <br/><br/>
                 </div>
                 </c:forEach>

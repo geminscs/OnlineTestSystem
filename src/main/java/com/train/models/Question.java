@@ -6,6 +6,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 @Entity
 @Table(name="question")
 public class Question {
@@ -165,5 +168,32 @@ public class Question {
 	public void setAnsD(String ansD) {
 		this.ansD = ansD;
 	}
-
+	
+	public String getJsonString(){
+		JSONObject jsonObj = new JSONObject();
+		try {
+			jsonObj.put("content", content);
+			jsonObj.put("type", type);
+			jsonObj.put("catagory", catagory);
+			if(type == 0){
+				jsonObj.put("ansA", ansA);
+				jsonObj.put("ansB", ansB);
+				jsonObj.put("ansC", ansC);
+				jsonObj.put("ansD", ansD);
+				jsonObj.put("ansShort", ansShort);
+			}
+			else if(type == 1){
+				jsonObj.put("ansShort", ansShort);
+			}
+			else if(type == 2){
+				jsonObj.put("ansLong", ansLong);
+				jsonObj.put("value", value);
+			}
+			return jsonObj.toString();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

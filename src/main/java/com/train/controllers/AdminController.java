@@ -328,26 +328,21 @@ public class AdminController {
 	}
 	
 	@RequestMapping(value="/GetQuestion", method=RequestMethod.POST)
-	public String getQuestionsForEdit(String point, Model model){
-		List<Question> l = questionService.findByCatagoryAndType(point, 0);
+	public String getQuestionsForEdit(String point, int type, Model model){
+		List<Question> l = questionService.findByCatagoryAndType(point, type);
 		model.addAttribute("list", l);
 		return "testLayer";
 	}
 	
 	@RequestMapping(value="/GetFullQuestion", method=RequestMethod.GET)
 	public void getFullQuestionForEdit(HttpServletResponse response){
-		try {
-			Map<String, Object> result = new HashMap<String, Object>();
-			result.put("content", "율율율율");
+		try {			
+			response.setHeader("Content-Language", "zh-CN");
 			response.setCharacterEncoding("UTF-8");  
-		    response.setContentType("text/html; charset=utf-8");  
+		    response.setContentType("text/html; charset=utf-8");	    
 			PrintWriter out= response.getWriter();
-			JSONObject jsonObj =new JSONObject(result);
-			//jsonObj.put("content", "율율율");
-			//jsonObj.put("ansA", "A");
-			//jsonObj.put("ansB", "B");
-			String str = new String(jsonObj.toString().getBytes(), "UTF-8");
-			out.print(str);
+			
+			out.print("율율율 ");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -8,8 +8,8 @@
 <title>Insert title here</title>
 <style type="text/css">
 
-#dia{
-
+.questionJson{
+	display:none;
 }
 </style>
 
@@ -26,8 +26,8 @@ function responseMouseEvent(obj,type){
 	}
 	else if(type==2){
 		obj.style.backgroundColor = "#FFFFFF";
-		}
 	}
+}
 
 function responseClickEvent(obj){
 	if(obj.children[0].children[0].checked==true){
@@ -63,8 +63,8 @@ function responseClickEvent(obj){
 				<tr onclick="responseClickEvent(this);" onmouseover="responseMouseEvent(this,1);" onmouseout="responseMouseEvent(this,2)" style="cursor:hand;background-color:#FFFFFF">
 					<td><input type="checkbox" name="update_checkbox" id="update_checkbox" />
 					</td>
-					<td>${um.getId() }</td>
 					<td>${um.getContent() }</td>
+					<td class="questionJson">${um.getJsonString() }</td>
 				</tr>
 				</c:forEach>
 			</table>

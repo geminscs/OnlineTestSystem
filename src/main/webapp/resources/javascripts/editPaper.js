@@ -2,18 +2,60 @@
  * Created by Administrator on 2015/3/21.
  */
 $(document).ready(function(){
+	var g_selectedQuesIndex = -1;
+	var g_selectedQuesType = -1;
     $(document).off("click",'button[name="selectFromDatabase"]');
     $(document).on("click",'button[name="selectFromDatabase"]',function(){
+    	g_selectedQuesIndex = $(this).parent().children().eq(0).html();
+    	g_selectedQuesType = 0;
+    	$('#questions').empty();
+        $('#dialog').show();
+    });
+    
+    $(document).on("click",'button[name="judgeFromDatabase"]',function(){
+    	g_selectedQuesIndex = $(this).parent().children().eq(0).html();
+    	g_selectedQuesType = 1;
+    	$('#questions').empty();
+        $('#dialog').show();
+    });
+    
+    $(document).on("click",'button[name="shortFromDatabase"]',function(){
+    	g_selectedQuesIndex = $(this).parent().children().eq(0).html();
+    	g_selectedQuesType = 2;
     	$('#questions').empty();
         $('#dialog').show();
     });
     
     $('#confirm').click(function(){
     	var selectedQuestionIndex = $('#selectedQuestion').val();
+    	if(!selectedQuestionIndex || selectedQuestionIndex < 0){
+    		$('#dialog').hide();
+    		return;
+    	}
     	var selectedTr = $('#questionTable').children().children().eq(selectedQuestionIndex).children().eq(1);
-    	$.get("/GetFullQuestion", function(jsonString){
-    		$('#selectContent1').val(jsonString);
-    	});
+    	var tdObj = $('#questionTable').children().children().eq(selectedQuestionIndex).children().eq(2);
+    	var jsonStr = tdObj.html();
+    	var jsonObj = JSON.parse(jsonStr);
+    	if(jsonObj.type == 0){
+    		 $('#selectQuestion').children('div').eq(g_selectedQuesIndex - 1).children('textarea').val(jsonObj.content);
+    		 $('#selectQuestion').children('div').eq(g_selectedQuesIndex - 1).children('input').eq(1).val(jsonObj.ansA);
+    		 $('#selectQuestion').children('div').eq(g_selectedQuesIndex - 1).children('input').eq(3).val(jsonObj.ansB);
+    		 $('#selectQuestion').children('div').eq(g_selectedQuesIndex - 1).children('input').eq(5).val(jsonObj.ansC);
+    		 $('#selectQuestion').children('div').eq(g_selectedQuesIndex - 1).children('input').eq(7).val(jsonObj.ansD);
+    	 
+    		 $('#selectQuestion').children('div').eq(g_selectedQuesIndex - 1).children('input[type="radio"]').removeAttr('checked');
+    		 $('#selectQuestion').children('div').eq(g_selectedQuesIndex - 1).children('input[type="radio"]').eq(jsonObj.ansShort).prop("checked", true);
+    	}
+    	else if(jsonObj.type == 1){
+    		$('#judgeQuestion').children('div').eq(g_selectedQuesIndex - 1).children('textarea').val(jsonObj.content);
+    		$('#judgeQuestion').children('div').eq(g_selectedQuesIndex - 1).children('input[type="radio"]').removeAttr('checked');	
+    		$('#judgeQuestion').children('div').eq(g_selectedQuesIndex - 1).children('input[type="radio"]').eq(jsonObj.ansShort).prop("checked",true);
+    	}
+    	else if(jsonObj.type == 2){
+    		$('#shortQuestion').children('div').eq(g_selectedQuesIndex - 1).children('textarea').eq(0).val(jsonObj.content);
+    		$('#shortQuestion').children('div').eq(g_selectedQuesIndex - 1).children('textarea').eq(1).val(jsonObj.ansLong);
+    		$('#shortQuestion').children('div').eq(g_selectedQuesIndex - 1).children('input').val(jsonObj.value);
+    	}
     	$('#dialog').hide();
     });
     
@@ -23,7 +65,7 @@ $(document).ready(function(){
     
     $('#point').change(function(){
     	var seletedPoint = $(this).children('option:selected').val();
-    	$('#questions').load( '/GetQuestion', {point:seletedPoint});
+    	$('#questions').load( '/GetQuestion', {point:seletedPoint, type:g_selectedQuesType});
     });
 	
     $("#addSelect").click(function(){
@@ -57,6 +99,8 @@ $(document).ready(function(){
             '<input type="radio" name="judgeAnswer'+id+'" value="0">错误'+
             '<input type="radio" name="judgeAnswer'+id+'" value="1">正确'+
             '<br/><br/>'+
+            '<button name="judgeFromDatabase" class="btn btn-primary btn-xs">从题库中添加</button>'+
+            '<br/><br/>'+
             '</div>';
         $(this).before(str);
         $("#maxJudgeID").val(id);
@@ -72,8 +116,10 @@ $(document).ready(function(){
         '<label>参考答案：</label>'+
         '<textarea id="shortAnswer'+id+'" cols="100" rows="3"  style="vertical-align: top;"></textarea>'+
         '<br/><br/>'+
-         '<label>分值：</label><input id="shortValue'+id+'" type="number">'+
-            '<br/><br/>'+
+        '<label>分值：</label><input id="shortValue'+id+'" type="number">'+
+        '<br/><br/>'+
+        '<button name="shortFromDatabase" class="btn btn-primary btn-xs">从题库中添加</button>'+
+        '<br/><br/>'+
         '</div>';
         $(this).before(str);
         $("#maxShortID").val(id);
@@ -89,7 +135,7 @@ $(document).ready(function(){
             var question={};
             question.id=parseInt($("#selectID"+i).text());
             question.type=0;
-            //alert(question.id.toString());
+            alert(n.val());
             if(n.length<1){
                 alert ("选择题第"+i+"题请至少选择一项！");
                 return;
@@ -164,6 +210,6 @@ $(document).ready(function(){
 
         var finalStr = JSON.stringify(questionArray);
         var testStr = JSON.stringify(testInfo);
-        $("#content").load("/SubmitPaper", {jsonString:finalStr, testInfoString:testStr});
+        //$("#content").load("/SubmitPaper", {jsonString:finalStr, testInfoString:testStr});
     });
 });
